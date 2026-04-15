@@ -1,87 +1,68 @@
-fn add(a: i32, b: i32) -> i32 {
-    a + b
-}
-fn divide(a: i32, b: i32) -> i32 {
-    if b == 0 {
-        panic!("Cannot divide by zero");
-    }
-    a / b
-}
-fn is_even(n: i32) -> bool {
-        n % 2 == 0
-    }
-fn main() {
-    println!("2 + 2 = {}", add(2, 2));
-}
+//use std::thread;
+//use std::time::Duration;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_add() {
-        assert_eq!(add(2, 2), 4);
-    }
-    #[test]
-    fn test_add_negative() {
-        assert_eq!(add(-2, -2), -4);
-    }
-
-    #[test]
-    fn test_add_zero() {
-        assert_eq!(add(0, 0), 0);
-    }
-    #[test]
-    fn test_is_even() {
-        assert!(is_even(2));
-        assert!(!is_even(3));
-    }
-
-    #[test]
-    fn test_not_equal() {
-        assert_ne!(add(2, 2), 5);
-    }
-    #[test]
-    #[should_panic(expected = "Cannot divide by zero")]
-    fn test_divide_by_zero() {
-        divide(10, 0);
-    }
-    #[test]
-    fn test_add_multiple() {
-        let test_cases = vec![
-            (1, 1, 2),
-            (0, 0, 0),
-            (-1, 1, 0),
-            (100, -50, 50)
-        ];
+//fn main() {
+  //  println!("Main thread starting");
     
-        for (a, b, expected) in test_cases {
-            assert_eq!(add(a, b), expected, "Failed on input ({}, {})", a, b);
-        }
+    // TODO: Create a vector to store thread handles
+    //let mut handles = vec![];
+    
+    // TODO: Spawn 3 threads
+    //for i in 1..=3 {
+        // TODO: Spawn a thread and store its handle
+      //  let handle = thread::spawn(move || {
+            // Simulate some work
+        //    println!("Thread {} starting", i);
+            //thread::sleep(Duration::from_millis(500));
+          //  println!("Thread {} finished", i);
+       // });
+        
+        // TODO: Store the handle
+        //handles.push(handle);
+   // }
+    
+    // TODO: Wait for all threads to complete
+    //for handle in handles{
+      //handle.join().unwrap();
+    //}
+    //println!("All threads completed.");
+//}
+
+
+use std::sync::{Arc, Mutex};
+use std::thread;
+
+fn main() {
+    // TODO: Create a shared counter using Arc and Mutex
+    let counter = Arc::new(Mutex::new(0));
+    
+    // TODO: Create a vector to store thread handles
+    let mut handles = vec![];
+    
+    // TODO: Spawn 5 threads
+    for i in 1..=5 {
+        // TODO: Clone the Arc for the thread
+        let counter_clone = Arc::clone(&counter);
+        
+        // TODO: Spawn a thread that increments the counter 10 times
+        let handle = thread::spawn(move || {
+            // TODO: Increment counter 10 times
+            for i in 0..10{
+              let mut num = counter_clone.lock().unwrap();
+              *num += 1;
+            }
+            
+        });
+        
+        handles.push(handle);
     }
-    #[test]
-    fn test_is_even_verbose() {
-        let number = 5;
-        assert!(
-            is_even(number),
-            "Expected {} to be even, but it was odd",
-            number
-        );
+    
+    // TODO: Wait for all threads to complete
+    for handle in handles {
+        handle.join().unwrap();
     }
-    mod arithmetic_tests {
-        use super::*;
-
-        #[test]
-        fn test_complex_add() {
-            assert_eq!(add(add(1, 2), add(3, 4)), 10);
-        }
-
-        #[test]
-        fn test_even_arithmetic() {
-            assert!(is_even(add(2, 2)));
-            assert!(!is_even(add(2, 3)));
-        }
-        }
-
+    
+    // TODO: Print the final value of the counter
+    let final_value = *counter.lock().unwrap();
+    println!("Final counter value: {}", final_value);
 }
-
